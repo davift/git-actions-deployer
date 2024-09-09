@@ -1,5 +1,7 @@
 # NGINX APP - Combined Manifests
+# https://github.com/davift/github-actions
 
+# namespace.yaml
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -9,6 +11,7 @@ metadata:
 
 ---
 
+# deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,6 +48,7 @@ spec:
 
 ---
 
+# service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -59,6 +63,7 @@ spec:
 
 ---
 
+# ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -67,7 +72,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: "/"
 spec:
-  ingressClassName: nginx-${ENV}
+  ingressClassName: nginx
   rules:
   - host: ${ENV}-nginx.dftorres.ca
     http:
@@ -79,6 +84,4 @@ spec:
             name: nginx-service-${ENV}
             port:
               number: 80
-
-
 

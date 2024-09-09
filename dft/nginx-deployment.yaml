@@ -31,3 +31,4 @@ spec:
       - name: www
         hostPath:
           path: /mnt/data
+

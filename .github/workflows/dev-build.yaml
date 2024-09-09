@@ -39,6 +39,7 @@ jobs:
             if [[ $file == */Dockerfile && $file != .github/workflows/* ]]; then
               cd $(dirname "$file")
               /usr/bin/docker build . -t 10.10.10.100:32000/dev-$(dirname $(dirname "$file")):dev
+              /usr/bin/docker tag 10.10.10.100:32000/dev-$(dirname $(dirname "$file")):dev
               /usr/bin/docker push 10.10.10.100:32000/dev-$(dirname $(dirname "$file")):dev
             else
               echo "Nothing to deploy"

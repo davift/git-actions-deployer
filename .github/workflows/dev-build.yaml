@@ -48,6 +48,6 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == *.yaml && $file != .github/workflows/* ]]; then
               echo "Deploying: $file"
-              ENV=prod /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/$ENV/g" $file)
+              /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/dev/g" $file)
             fi
           done

@@ -39,24 +39,15 @@ jobs:
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == */Dockerfile ]]; then
-              cd $(dirname "$file")
               echo "Building: $file"
-              /usr/bin/docker build . -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
+              /usr/bin/docker build $file -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
               echo "Pushing..."
               /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
-            else
-              echo "Skipped file: $file"
             fi
           done
-
-      # Applying only changed manifests
-      - if: ${{ env.MULTILINE != '' }}
-        name: Applying
-        run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == *.yaml && $file != .github/workflows/* ]]; then
+              echo "Deploying: $file"
               ENV=prod /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/$ENV/g" $file)
-            else
-              echo "Nothing to deploy"
             fi
           done

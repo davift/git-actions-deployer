@@ -39,9 +39,10 @@ jobs:
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == */Dockerfile ]]; then
-              echo "Build: $file"
               cd $(dirname "$file")
+              echo "Building: $file"
               /usr/bin/docker build . -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
+              echo "Pushing..."
               /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
             else
               echo "Skipped file: $file"

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: nginx-app
-        image: localhost:32000/dft:latest
+        image: localhost:32000/dft:${ENV}
         ports:
         - containerPort: 80
         startupProbe:

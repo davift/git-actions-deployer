@@ -1,4 +1,4 @@
-name: Stage Build Artifacts
+name: Stage Build Artifacts and Deploying
 
 on:
   push:

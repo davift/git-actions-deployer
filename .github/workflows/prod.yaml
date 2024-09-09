@@ -1,27 +1,26 @@
-name: Deploy Manifests
+name: Prod Build Artifacts and Deploying
 
 on:
-  # Only runs when the previous workflow is completed
-  workflow_run:
-    workflows: ["Build Artifacts"]
-    types:
-      - completed
-  # This workflow can be manually triggered
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: self-hosted-prod
+  build:
+    runs-on: self-hosted-non-prod
 
     steps:
       # Sanity check
       - name: Run
         run: |
-          /usr/local/bin/kubectl get nodes
+          /usr/bin/docker images
 
       # When self-hosting this is necessary
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       # Parsing files list
       - name: List of changed files
@@ -39,8 +38,16 @@ jobs:
         name: Applying
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ $file == */Dockerfile ]]; then
+              echo "Building: $file"
+              /usr/bin/docker build $(dirname "$file") -t 10.10.10.100:32000/$(dirname $(dirname "$file")):prod
+              echo "Pushing..."
+              /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):prod
+            fi
+          done
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == *.yaml && $file != .github/workflows/* ]]; then
               echo "Deploying: $file"
-              /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/stage/g" $file)
+              /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/prod/g" $file)
             fi
           done

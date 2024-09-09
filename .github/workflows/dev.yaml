@@ -3,7 +3,7 @@ name: Dev Build Artifacts and Deploying
 on:
   pull_request:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 jobs:

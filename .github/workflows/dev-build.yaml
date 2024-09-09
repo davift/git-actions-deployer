@@ -1,4 +1,4 @@
-name: Dev Build Artifacts
+name: Dev Build Artifacts and Deploying
 
 on:
   pull_request:
@@ -33,7 +33,7 @@ jobs:
           echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr " " "\n" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      # Applying only changed manifests
+      # Applying only changed files
       - if: ${{ env.MULTILINE != '' }}
         name: Applying
         run: |

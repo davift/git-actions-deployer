@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: nginx.dftorres.ca
+  - host: ${ENV}-nginx.dftorres.ca
     http:
       paths:
       - path: /

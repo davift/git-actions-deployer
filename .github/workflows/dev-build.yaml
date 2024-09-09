@@ -1,4 +1,4 @@
-name: Dev Build Artifacts
+name: Dev Build Artifacts and Deploying
 
 on:
   pull_request:
@@ -19,6 +19,8 @@ jobs:
       # When self-hosting this is necessary
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       # Parsing files list
       - name: List of changed files
@@ -31,16 +33,21 @@ jobs:
           echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr " " "\n" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      # Applying only changed manifests
+      # Applying only changed files
       - if: ${{ env.MULTILINE != '' }}
         name: Applying
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            if [[ $file == */Dockerfile && $file != .github/workflows/* ]]; then
-              cd $(dirname "$file")
-              /usr/bin/docker build . -t 10.10.10.100:32000/dev-$(dirname $(dirname "$file"))
-              /usr/bin/docker push 10.10.10.100:32000/dev-$(dirname $(dirname "$file"))
-            else
-              echo "Nothing to deploy"
+            if [[ $file == */Dockerfile ]]; then
+              echo "Building: $file"
+              /usr/bin/docker build $(dirname "$file") -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
+              echo "Pushing..."
+              /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
+            fi
+          done
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ $file == *.yaml && $file != .github/workflows/* ]]; then
+              echo "Deploying: $file"
+              /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/dev/g" $file)
             fi
           done

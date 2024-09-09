@@ -34,14 +34,13 @@ jobs:
           echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr " " "\n" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      # Applying only changed manifests
+      # Applying only changed files
       - if: ${{ env.MULTILINE != '' }}
         name: Applying
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == *.yaml && $file != .github/workflows/* ]]; then
-              /usr/local/bin/kubectl apply -f $file
-            else
-              echo "Nothing to deploy"
+              echo "Deploying: $file"
+              /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/stage/g" $file)
             fi
           done

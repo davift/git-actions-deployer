@@ -38,8 +38,8 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == */Dockerfile && $file != .github/workflows/* ]]; then
               cd $(dirname "$file")
-              /usr/bin/docker build . -t 10.10.10.100:32000/stage-$(dirname $(dirname "$file"))
-              /usr/bin/docker push 10.10.10.100:32000/stage-$(dirname $(dirname "$file"))
+              /usr/bin/docker build . -t 10.10.10.100:32000/stage-$(dirname $(dirname "$file")):stage
+              /usr/bin/docker push 10.10.10.100:32000/stage-$(dirname $(dirname "$file")):stage
             else
               echo "Nothing to deploy"
             fi

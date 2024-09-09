@@ -19,6 +19,8 @@ jobs:
       # When self-hosting this is necessary
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       # Parsing files list
       - name: List of changed files
@@ -41,6 +43,6 @@ jobs:
               /usr/bin/docker build . -t 10.10.10.100:32000/$(dirname $(dirname "$file")):stage
               /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):stage
             else
-              echo "Nothing to deploy"
+              echo "Nothing to build"
             fi
           done

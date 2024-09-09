@@ -40,14 +40,13 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == */Dockerfile ]]; then
               echo "Building: $file"
-              /usr/bin/docker build $file -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
+              /usr/bin/docker build $(dirname "$file") -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
               echo "Pushing..."
               /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
             fi
           done
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == *.yaml && $file != .github/workflows/* ]]; then
-              echo "Deploying: $file"
               ENV=prod /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/$ENV/g" $file)
             fi
           done

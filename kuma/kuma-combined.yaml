@@ -19,7 +19,6 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: manual
   capacity:
     storage: 2Gi
   accessModes:
@@ -36,7 +35,6 @@ metadata:
   name: kuma-volume-claim-${ENV}
   namespace: kuma
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:

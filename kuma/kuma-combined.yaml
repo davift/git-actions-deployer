@@ -34,6 +34,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: kuma-volume-claim-${ENV}
+  namespace: kuma
 spec:
   storageClassName: manual
   accessModes:
@@ -117,5 +118,5 @@ spec:
           service:
             name: kuma-service-${ENV}
             port:
-              number: 3001
+              number: 80
 

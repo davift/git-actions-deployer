@@ -1,0 +1,121 @@
+# UPTIME KUMA APP - Combined Manifests
+# https://github.com/davift/github-actions
+
+# namespace.yaml
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: kuma
+  labels:
+    name: kuma
+
+---
+
+# persistent-volume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kuma-volume-${ENV}
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    # Only one instance can mount it at a give time
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/kuma"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kuma-volume-claim-${ENV}
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuma-app-${ENV}
+  namespace: kuma
+spec:
+  # This application shall only have one instance
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kuma-app-${ENV}
+  template:
+    metadata:
+      labels:
+        app: kuma-app-${ENV}
+    spec:
+      containers:
+      - name: kuma-app-${ENV}
+        image: localhost:32000/kuma:${ENV}
+        ports:
+        - containerPort: 3001
+        startupProbe:
+          httpGet:
+            path: /
+            port: 3001
+          periodSeconds: 5
+          failureThreshold: 20
+        volumeMounts:
+        - name: kuma-volume-storage-${ENV}
+          mountPath: /app/data
+      volumes:
+      - name: kuma-volume-storage-${ENV}
+        persistentVolumeClaim:
+          claimName: kuma-volume-claim-${ENV}
+
+---
+
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuma-service-${ENV}
+  namespace: kuma
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: kuma-app-${ENV}
+
+---
+
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kuma-ingress-${ENV}
+  namespace: kuma
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ${ENV}-kuma.internal
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kuma-service-${ENV}
+            port:
+              number: 80
+

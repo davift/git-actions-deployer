@@ -40,9 +40,9 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: microk8s-hostpath
-  volumeMode: Filesystem
+  # persistentVolumeReclaimPolicy: Retain
+  # storageClassName: microk8s-hostpath
+  # volumeMode: Filesystem
 
 ---
 

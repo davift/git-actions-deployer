@@ -20,6 +20,7 @@ metadata:
     type: local
 spec:
   capacity:
+    # Can be resized
     storage: 1Gi
   accessModes:
     # Only one instance can mount it at a give time
@@ -40,6 +41,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
+      # Can NOT be resized
       storage: 1Gi
 
 ---

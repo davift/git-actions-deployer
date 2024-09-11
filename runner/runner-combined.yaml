@@ -19,7 +19,7 @@ metadata:
   namespace: runner
 spec:
   # This application shall only have one instance
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: runner-app-${ENV}

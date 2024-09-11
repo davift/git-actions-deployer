@@ -40,6 +40,7 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == */Dockerfile ]]; then
               echo "Building: $file"
+              sed "s/<TOKEN>/%TOKEN%/g" -i Dockerfile
               /usr/bin/docker build $(dirname "$file") -t 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
               echo "Pushing..."
               /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):dev
@@ -51,3 +52,5 @@ jobs:
               /usr/local/bin/kubectl apply -f <(sed "s/\${ENV}/dev/g" $file)
             fi
           done
+        with:
+          TOKEN: ${{ secrets.TOKEN }}

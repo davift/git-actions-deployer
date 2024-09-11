@@ -24,7 +24,6 @@ spec:
   accessModes:
     # Only one instance can mount it at a give time
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: "/mnt/kuma"
 
@@ -41,6 +40,9 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: microk8s-hostpath
+  volumeMode: Filesystem
 
 ---
 

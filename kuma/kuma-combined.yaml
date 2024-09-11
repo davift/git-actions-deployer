@@ -24,6 +24,7 @@ spec:
   accessModes:
     # Only one instance can mount it at a give time
     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: "/mnt/kuma"
 

@@ -20,7 +20,7 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     # Only one instance can mount it at a give time
     - ReadWriteOnce

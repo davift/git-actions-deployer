@@ -12,11 +12,29 @@ This repository contains examples for building and deploying to Dev and Prod env
 
 ## It also contains examples of Kubernetes resources:
 
-- `dft/`
+- `nginx/`
+  - Nginx with PHP and volume (path) mounted from the host.
   - `docker/Dockerfile`
     - Container image build configuration.
   - `nginx-combined.yaml`
-    - Combined manifests: Namespace + Deployment + Service + Ingress
+    - Combined manifests
+      - Namespace
+      - Deployment
+      - Service
+      - Ingress
+
+- `kuma/`
+  - UptimeKuma with Persistent Volume.
+  - `docker/Dockerfile`
+    - Container image build configuration.
+  - `nginx-combined.yaml`
+    - Combined manifests:
+      - Namespace
+      - Persistent Volume
+      - Persistent Volume Claim
+      - Deployment
+      - Service
+      - Ingress
 
 ## For more information, check out:
 

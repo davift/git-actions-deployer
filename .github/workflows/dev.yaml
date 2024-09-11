@@ -12,9 +12,9 @@ jobs:
 
     steps:
       # Sanity check
-      - name: Run
-        run: |
-          /usr/bin/docker images
+      # - name: Run
+      #   run: |
+      #     /usr/bin/docker images
 
       # When self-hosting this is necessary
       - name: Checkout repo

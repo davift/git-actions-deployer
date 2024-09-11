@@ -29,6 +29,7 @@ spec:
 
 ---
 
+# persistent-volume-claim.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

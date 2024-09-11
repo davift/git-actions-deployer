@@ -15,7 +15,7 @@ RUN mkdir -p /home/runner/actions-runner/
 RUN wget -q https://github.com/actions/runner/releases/download/v2.319.1/actions-runner-linux-x64-2.319.1.tar.gz -O /home/runner/actions-runner/actions-runner-linux-x64-2.319.1.tar.gz
 RUN tar xzf /home/runner/actions-runner/actions-runner-linux-x64-2.319.1.tar.gz -C /home/runner/actions-runner/
 RUN rm /home/runner/actions-runner/actions-runner-linux-x64-2.319.1.tar.gz
-RUN cd /home/runner/actions-runner ; ./config.sh --unattended --url https://github.com/davift/github-actions --token <TOKEN> --replace --name actions-local
+RUN cd /home/runner/actions-runner ; ./config.sh --unattended --url https://github.com/davift/github-actions --token <TOKEN> --replace --name actions-<ENV>
 # Entry-point
 USER runner
 CMD ["sh", "-c", "cd /home/runner/actions-runner && ./run.sh"]

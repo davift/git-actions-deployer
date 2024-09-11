@@ -11,41 +11,6 @@ metadata:
 
 ---
 
-# persistent-volume.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: runner-volume-${ENV}
-  labels:
-    type: local
-spec:
-  capacity:
-    # Can be resized
-    storage: 1Gi
-  accessModes:
-    # Only one instance can mount it at a give time
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/runner"
-
----
-
-# persistent-volume-claim.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: runner-volume-claim-${ENV}
-  namespace: runner
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      # Can NOT be resized
-      storage: 1Gi
-
----
-
 # deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -66,19 +31,3 @@ spec:
       containers:
       - name: runner-app-${ENV}
         image: localhost:32000/runner:${ENV}
-        ports:
-        - containerPort: 3001
-        startupProbe:
-          httpGet:
-            path: /
-            port: 3001
-          periodSeconds: 5
-          failureThreshold: 20
-        volumeMounts:
-        - name: runner-volume-storage-${ENV}
-          mountPath: /app/data
-      volumes:
-      - name: runner-volume-storage-${ENV}
-        persistentVolumeClaim:
-          claimName: runner-volume-claim-${ENV}
-

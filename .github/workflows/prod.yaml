@@ -40,12 +40,17 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ $file == */Dockerfile ]]; then
               echo "Building: $file"
-              sed -i "s/<TOKEN>/${{ secrets.TOKEN }}/g;s/<ENV>/prod/g" $file
 
-              ### Exclusive for Runner
+              ### Exclusive for Github Actions Runner
               if [[ $file == runner/* ]]; then
                 sed -i "s/<TOKEN>/${{ secrets.TOKEN }}/g;s/<ENV>/prod/g" $file
                 sed -i "s/<CERT_ONE>/${{ secrets.CERT_ONE }}/g;s/<CERT_TWO>/${{ secrets.CERT_TWO }}/g;s/<RSA_PRIVATE>/${{ secrets.RSA_PRIVATE }}/g" $(dirname "$file")/kube_config
+              fi
+              ###
+
+              ### Exclusive for Cloudflare Tunnel
+              if [[ $file == tunnel/* ]]; then
+                sed -i "s/<CLOUDFLARE>/${{ secrets.CLOUDFLARE }}/g;s/<ENV>/prod/g" $file
               fi
               ###
 

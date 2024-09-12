@@ -27,7 +27,7 @@ This repository contains examples for building and deploying to Dev and Prod env
   - UptimeKuma with Persistent Volume.
   - `docker/Dockerfile`
     - Container image build configuration.
-  - `nginx-combined.yaml`
+  - `kuma-combined.yaml`
     - Combined manifests:
       - Namespace
       - Persistent Volume
@@ -35,6 +35,24 @@ This repository contains examples for building and deploying to Dev and Prod env
       - Deployment
       - Service
       - Ingress
+
+- `runner/`
+  - GitHub Actions Runnel with Privileged Security context and Repository Secrets.
+  - `docker/Dockerfile`
+    - Container image build configuration.
+  - `runner-combined.yaml`
+    - Combined manifests
+      - Namespace
+      - Deployment
+
+- `tunnel/`
+  - Cloudflare Tunnel with Repository Secret.
+  - `docker/Dockerfile`
+    - Container image build configuration.
+  - `tunnel-combined.yaml`
+    - Combined manifests
+      - Namespace
+      - Deployment
 
 ## For more information, check out:
 

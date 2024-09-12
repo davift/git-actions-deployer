@@ -12,9 +12,9 @@ jobs:
 
     steps:
       # Sanity check
-      # - name: Run
-      #   run: |
-      #     /usr/bin/docker images
+      - name: Run
+        run: |
+          /usr/bin/docker images
 
       # When self-hosting this is necessary
       - name: Checkout repo
@@ -41,9 +41,14 @@ jobs:
             if [[ $file == */Dockerfile ]]; then
               echo "Building: $file"
               sed -i "s/<TOKEN>/${{ secrets.TOKEN }}/g;s/<ENV>/dev/g" $file
-              if [ -f "$(dirname "$file")/kube_config" ]; then
+
+              ### Exclusive for Runner
+              if [[ $file == runner/* ]]; then
+                sed -i "s/<TOKEN>/${{ secrets.TOKEN }}/g;s/<ENV>/dev/g" $file
                 sed -i "s/<CERT_ONE>/${{ secrets.CERT_ONE }}/g;s/<CERT_TWO>/${{ secrets.CERT_TWO }}/g;s/<RSA_PRIVATE>/${{ secrets.RSA_PRIVATE }}/g" $(dirname "$file")/kube_config
               fi
+              ###
+
               /usr/bin/docker build $(dirname "$file") -t 10.10.10.100:32000/$(dirname $(dirname "$file")):prod
               echo "Pushing..."
               /usr/bin/docker push 10.10.10.100:32000/$(dirname $(dirname "$file")):prod

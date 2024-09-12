@@ -1,0 +1,33 @@
+# CLOUDFLARE TUNNEL - Combined Manifests
+# https://github.com/davift/github-actions
+
+# namespace.yaml
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: tunnel
+  labels:
+    name: tunnel
+
+---
+
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tunnel-app-${ENV}
+  namespace: tunnel
+spec:
+  # This application shall only have one instance
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tunnel-app-${ENV}
+  template:
+    metadata:
+      labels:
+        app: tunnel-app-${ENV}
+    spec:
+      containers:
+      - name: tunnel-app-${ENV}
+        image: localhost:32000/tunnel:${ENV}

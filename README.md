@@ -7,7 +7,7 @@ This repository contains examples for building and deploying to Dev and Prod env
 - `.github/workflows/`
   - `dev.yaml`
     - Automatically build and deploy into Dev when a PR is open.
-  - `dev.yaml`
+  - `prod.yaml`
     - Automatically build and deploy into Dev when a PR is approved.
 
 ## It also contains examples of Kubernetes resources:
